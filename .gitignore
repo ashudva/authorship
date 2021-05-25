@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# VScode
+.vscode/
+
+# Others
+Docs/
+glove/
+gutenberg/
+vocab_gutenberg.pkl

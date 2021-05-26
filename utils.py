@@ -129,7 +129,7 @@ def vectorize_sequence(sequences, dimension=10000):
     return results
 
 
-def plot_history(history):
+def plot_history(history, metric='acc'):
     """
     Plots the history of training of a model during epochs
     
@@ -145,9 +145,9 @@ def plot_history(history):
     ax1.plot(history.epoch, history.history.get(
         'val_loss'), '-', label='val loss')
     ax2.plot(history.epoch, history.history.get(
-        'acc'), 'o', label='train acc')
+        metric), 'o', label='train acc')
     ax2.plot(history.epoch, history.history.get(
-        'val_acc'), '-', label='val acc')
+        f"val_{metric}"), '-', label='val acc')
     ax1.set_xlabel("epoch")
     ax1.set_ylabel("loss")
     ax2.set_xlabel("epoch")

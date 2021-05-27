@@ -1,12 +1,11 @@
 import keras
+import pickle
 import matplotlib.pyplot as plt
 from keras import models, layers
 import numpy as np
-import pickle
 from pathlib import Path
 from tokenizers import Tokenizer
 import tensorflow as tf
-from tensorflow.python.data.ops.dataset_ops import AUTOTUNE
 
 AUTOTUNE = tf.data.AUTOTUNE
 

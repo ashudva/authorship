@@ -168,4 +168,8 @@ lstm_history = lstm_model.fit(
 lstm_model.evaluate(test_ds)
 
 # plot the history of training
-plot_history(lstm_history)
+plot_history(
+    lstm_history,
+    save_path=Path('plots/base.jpg'),
+    model_name="ConvnetBiLSTM"
+)

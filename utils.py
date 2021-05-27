@@ -110,7 +110,12 @@ def vectorize_sequence(sequences: np.ndarray, dimension: int = 10000):
     return results
 
 
-def plot_history(history:  keras.callbacks.History, metric:  str = 'acc') -> None:
+def plot_history(
+    history:  keras.callbacks.History,
+    metric:  str = 'acc',
+    save_path: Path = None,
+    model_name: str = None
+) -> None:
     """
     Plots the history of training of a model during epochs
 
@@ -137,6 +142,8 @@ def plot_history(history:  keras.callbacks.History, metric:  str = 'acc') -> Non
     ax2.set_ylabel("accuracy")
     ax1.set_title("Loss")
     ax2.set_title("Accuracy")
-    f.suptitle("Training and Validation History")
+    f.suptitle(f"Training History: {model_name}")
     ax1.legend()
     ax2.legend()
+    if save_path is not None:
+        f.savefig(save_path)

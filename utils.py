@@ -1,14 +1,17 @@
+import keras
 import matplotlib.pyplot as plt
 from keras import models, layers
 import numpy as np
 import pickle
 from pathlib import Path
+from tokenizers import Tokenizer
 import tensorflow as tf
 from tensorflow.python.data.ops.dataset_ops import AUTOTUNE
 
 AUTOTUNE = tf.data.AUTOTUNE
 
-def get_text(ds:tf.data.Dataset) -> tuple:
+
+def get_text(ds: tf.data.Dataset) -> tuple:
     """
     Get the text from a tf.data.Dataset object
     Args:
@@ -25,30 +28,7 @@ def get_text(ds:tf.data.Dataset) -> tuple:
     return (texts, labels)
 
 
-def prepare_unbatched(ds, tokenizer):
-    """
-    Perform following ops in the input dataset
-    1. Get the text
-    2. Encode text
-    3. Make tf.data.Dataset
-    4. Shuffle
-    5. Prefetch and Cache
-    """
-    text, labels = get_text(ds)
-    encodings = tokenizer(
-        text,
-        truncation=True,
-        padding=True
-    )
-
-    ds = tf.data.Dataset.from_tensor_slices((
-        dict(encodings),
-        labels
-    ))
-    ds = ds.shuffle(1000)
-    return ds.cache().prefetch(buffer_size=AUTOTUNE)
-
-def prepare_batched(ds, tokenizer, batch_size=16):
+def prepare_batched(ds: tf.data.Dataset, tokenizer: Tokenizer, batch_size: int = 16) -> tf.data.Dataset:
     """
     Perform following ops in the input dataset
     1. Get the text
@@ -73,14 +53,13 @@ def prepare_batched(ds, tokenizer, batch_size=16):
     return ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 
-
 def save_object(obj: object, file_path: Path) -> None:
     """
     Save a python object to the disk and creates the file if does not exists already.
     Args:
         file_path - Path object for pkl file location
         obj       - object to be saved
-    
+
     Returns:
         None
     """
@@ -100,7 +79,7 @@ def load_object(file_path: Path) -> object:
     Loads the pickle object file from the disk.
     Args:
         file_path - Path object for pkl file location
-    
+
     Returns:
         object
     """
@@ -112,29 +91,33 @@ def load_object(file_path: Path) -> object:
         raise FileNotFoundError
 
 
-def vectorize_sequence(sequences, dimension=10000):
+def vectorize_sequence(sequences: np.ndarray, dimension: int = 10000):
     """
     Convert sequences into one-hot encoded matrix of dimension [len(sequence), dimension]
-    
-    Args: sequences - ndarray of shape [samples, words]
-          dimension = number of total words in vocab
-    Return: vectorized sequence of shape [samples, one-hot-vecotor]
+
+    Args: 
+        sequences - ndarray of shape [samples, words]
+        dimension = number of total words in vocab
+    Return:
+        vectorized sequence of shape [samples, one-hot-vecotor]
     """
     # Create all-zero matrix
     results = np.zeros((len(sequences), dimension))
-    
+
     for (i, sequence) in enumerate(sequences):
         results[i, sequence] = 1.
-        
+
     return results
 
 
-def plot_history(history, metric='acc'):
+def plot_history(history:  keras.callbacks.History, metric:  str = 'acc') -> None:
     """
     Plots the history of training of a model during epochs
-    
-    Args: history - model history
-    
+
+    Args: history:
+        model history - training history of a model
+        metric - 
+
     Plots:
     1. Training and Validation Loss
     2. Training and Validation Accuracy
@@ -157,44 +140,3 @@ def plot_history(history, metric='acc'):
     f.suptitle("Training and Validation History")
     ax1.legend()
     ax2.legend()
-
-def plot_mae_history(history):
-    """
-    Plots the history of training of a model during epochs
-    
-    Args: history - model history
-    
-    Plots:
-    1. Training and Validation Loss
-    2. Training and Validation Accuracy
-    """
-    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    ax1.plot(history.epoch, history.history.get(
-        'loss'), "o", label='train loss')
-    ax1.plot(history.epoch, history.history.get(
-        'val_loss'), '-', label='val loss')
-    ax2.plot(history.epoch, history.history.get(
-        'mae'), 'o', label='train mae')
-    ax2.plot(history.epoch, history.history.get(
-        'val_mae'), '-', label='val mae')
-    ax1.set_xlabel("epoch")
-    ax1.set_ylabel("loss")
-    ax2.set_xlabel("epoch")
-    ax2.set_ylabel("mae")
-    ax1.set_title("Loss")
-    ax2.set_title("MAE")
-    f.suptitle("Training and Validation History")
-    ax1.legend()
-    ax2.legend()
-
-def buil_model(nfeatures):
-    """
-    Returns a model with input_shape as nfeatures
-    """
-
-    model = models.Sequential()
-    model.add(layers.Dense(64, activation='relu', input_shape=nfeatures))
-    model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(1))
-
-    return model

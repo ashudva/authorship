@@ -11,7 +11,8 @@ __pycache__/
 build/
 logs/
 develop-eggs/
-C50/
+data/C50/
+data/C50_raw/
 dist/
 downloads/
 eggs/

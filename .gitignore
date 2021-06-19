@@ -1,5 +1,4 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
+c__pycache__/
 *.py[cod]
 *$py.class
 
@@ -13,6 +12,8 @@ logs/
 develop-eggs/
 data/C50/
 data/C50_raw/
+data/PAN14/
+data/Blog/
 dist/
 downloads/
 eggs/

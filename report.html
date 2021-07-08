@@ -1,0 +1,479 @@
+<!DOCTYPE html><html><head>
+      <title>report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/ashish/.vscode-insiders/extensions/shd101wyy.markdown-preview-enhanced-0.5.21/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 style="text-align:center;">Plagiarism Detection</h1>
+<p style="text-align:center;"><strong>Ashish Yadav, Divyanshu Singh, Naveen Mishra</strong> </p>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#intrinsic-plagiarism-detection">Intrinsic Plagiarism Detection</a></li>
+<li><a href="#extrinsic-plagiarism-detection">Extrinsic Plagiarism Detection</a></li>
+<li><a href="#traditional-approaches">Traditional Approaches</a></li>
+<li><a href="#problems-with-traditional-approaches">Problems with traditional Approaches</a></li>
+</ul>
+</li>
+<li><a href="#literature-review">Literature Review</a>
+<ul>
+<li><a href="#bert-and-transformer-architecture">BERT and Transformer Architecture</a></li>
+<li><a href="#attention">Attention:</a></li>
+<li><a href="#overview-of-transformer-architecture">Overview Of Transformer Architecture</a>
+<ul>
+<li><a href="#transformer-architecture">Transformer Architecture</a></li>
+<li><a href="#residual-connections">Residual Connections</a></li>
+<li><a href="#attention-mechanism">Attention Mechanism</a></li>
+<li><a href="#attention-heads">Attention Heads</a></li>
+<li><a href="#encoder">Encoder</a></li>
+<li><a href="#decoder">Decoder</a></li>
+<li><a href="#encoder-decoder-self-attention">Encoder-Decoder self-attention</a></li>
+<li><a href="#masked-attention">Masked attention</a></li>
+<li><a href="#tokenization">Tokenization</a></li>
+<li><a href="#word-embeddings">Word Embeddings</a></li>
+<li><a href="#positional-embeddings">Positional Embeddings</a></li>
+<li><a href="#self-attention">Self Attention</a></li>
+</ul>
+</li>
+<li><a href="#bert-architecture-overview">BERT Architecture Overview</a></li>
+<li><a href="#transfer-learning">Transfer Learning</a></li>
+<li><a href="#dataset-and-libraries">Dataset and Libraries</a></li>
+<li><a href="#proposed-methodology">Proposed Methodology</a>
+<ul>
+<li><a href="#baseline">Baseline</a></li>
+<li><a href="#bert-model-fine-tuning">BERT model fine-tuning</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#results">Results</a></li>
+</ul>
+<h1 class="mume-header" id="abstract">Abstract</h1>
+
+<p>Plagiarism is possibly almost an inevitable problem for any type of Intellectual Property, and it is prevalent in literary and scientific works.The widespread use of computers and the advent of the Internet have made it easier to plagiarize the work of others. One of the challenges of detecting plagiarism is that plagiarism changes per the type of work and where the work is getting submitted or published. Several techniques have been adopted over the years for detecting plagiarism in documents, books, art, publications, code and so many other intellectual properties of an individual. Our work is relevant to plagiarism in text documents written by an author. We utilize the latest advancements in Deep Learning, Natural Language Processing (NLP), and Natural Language Understanding (NLU) to check the authorship of a suspect document. In recent years, the NLP community has been putting forward incredibly powerful components that we can freely download and use and fine-tune for our downstream tasks and pipelines. It&#x2019;s been referred to as NLP&#x2019;s ImageNet moment, referencing how years ago similar developments accelerated the development of machine learning in Computer Vision tasks. One of the latest milestones in this development is the release of BERT, an event described as marking the beginning of a new era in NLP. BERT is a model that broke several records for how well models can handle language-based tasks. We use the BERT model to extract features from the text document of an author and then try to assign authorship to the suspect text through a classification head on top of the BERT model. Our results have shown a big leap in the performance at correctly assigning the authorship to a text document. We used the freely available C50 dataset from UCI Machine Learning Dataset Repository to train and test our model.</p>
+<h1 class="mume-header" id="introduction">Introduction</h1>
+
+<p>One of the problems that publishers constantly face is - how to automatically and correctly check if a certain document is plagiarised and locating instances of plagiarism or copyright infringement within a work or document. Detection of plagiarism can be undertaken in a variety of ways. Human detection is the most traditional form of identifying plagiarism from written work. This can be a lengthy and time-consuming task for the reader and can also result in inconsistencies in how plagiarism is identified within an organization. For automated plagiarism detection mainly two classes of techniques are used -</p>
+<ol>
+<li>Intrinsic Plagiarism Detection</li>
+<li>Extrinsic Plagiarism Detection</li>
+</ol>
+<h2 class="mume-header" id="intrinsic-plagiarism-detection">Intrinsic Plagiarism Detection</h2>
+
+<p>The goal of intrinsic plagiarism detection is to find passages within a document which appear to be significantly different from the rest of the document. In order to do so, we break the process down into three steps.</p>
+<ol>
+<li>Atomization -- Deconstruct a document into passages.</li>
+<li>Feature Extraction -- Quantify the style of each passage by extracting stylometric features based on linguistic properties of the text. Each passage is represented numerically as a vector of feature values.</li>
+<li>Classification -- Compare the feature vectors of passages to one another; those passages that are significantly different will have higher confidences of plagiarism. Return a confidence that a passage was plagiarized.</li>
+</ol>
+<div style="width: 80%; margin: 0 auto; text-align:center;" class="mume-header" id="extrinsic-plagiarism-detection">
+<img src="./plots/intrinsic.jpg">
+<p style="color:gray; font-size:13px;">Figure-1 - Intrinsic plagiarism detection</p>
+</div>
+##  Extrinsic Plagiarism Detection
+
+<p>Extrinsic plagiarism detection is given more information to work with: in addition to a suspicious document, we are also given a number of external documents or source documents to compare to the suspicious document. The extrinsic detection process can be broken into three steps:</p>
+<ol>
+<li>Atomization -- Deconstruct a document into passages.</li>
+<li>Fingerprinting -- Compress a passage of text into a fingerprint, a set of integers that represent the passage. The integers come from applying a hash function to some subset of n-grams of the passage.</li>
+<li>Fingerprint Matching -- Passages are now represented by fingerprints, which are simply sets of integers. To compare a fingerprint from the suspicious document with source fingerprints, we can use set similarity measures. Fingerprints with high similarity indicate a high confidence of the presence of plagiarism.</li>
+</ol>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/extrinsic.jpg">
+<p style="color:gray; font-size:13px;">Figure-2 - Extrinsic plagiarism detection</p>
+</div>
+<h2 class="mume-header" id="traditional-approaches">Traditional Approaches</h2>
+
+<p>The figure below represents a classification of all detection approaches currently in use for computer-assisted content similarity detection. The approaches are characterized by the type of similarity assessment they undertake: global or local. Global similarity assessment approaches use the characteristics taken from larger parts of the text or the document as a whole to compute similarity, while local methods only examine pre-selected text segments as input.</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/types.png">
+<p style="color:gray; font-size:13px;">Figure-3 - Traditional approaches of plagiarism detection</p>
+</div>
+<p><strong>1. Fingerprinting:</strong> It is currently the most widely applied approach to content similarity detection. This method forms representative digests of documents by selecting a set of multiple substrings (n-grams) from them. The sets represent the fingerprints and their elements are called minutiae. A suspicious document is checked for plagiarism by computing its fingerprint and querying minutiae with a precomputed index of fingerprints for all documents of a reference collection. Minutiae matching with those of other documents indicate shared text segments and suggest potential plagiarism if they exceed a chosen similarity threshold. Computational resources and time are limiting factors to fingerprinting, which is why this method typically only compares a subset of minutiae to speed up the computation and allow for checks in a very large collection, such as the Internet.</p>
+<p><strong>2. String matching:</strong> String matching is a prevalent approach used in computer science. When applied to the problem of plagiarism detection, documents are compared for verbatim text overlaps. Numerous methods have been proposed to tackle this task, of which some have been adapted to external plagiarism detection. Checking a suspicious document in this setting requires the computation and storage of efficiently comparable representations for all documents in the reference collection to compare them pairwise. Generally, suffix document models, such as suffix trees or suffix vectors, have been used for this task. Nonetheless, substring matching remains computationally expensive, which makes it a non-viable solution for checking large collections of documents.</p>
+<p><strong>3. Bag of words:</strong> Bag of words analysis represents the adoption of vector space retrieval, a traditional IR concept, to the domain of content similarity detection. Documents are represented as one or multiple vectors, e.g. for different document parts, which are used for pair-wise similarity computations. Similarity computation may then rely on the traditional cosine similarity measure or on more sophisticated similarity measures.</p>
+<p><strong>4. Citation analysis:</strong> Citation-based plagiarism detection (CbPD) relies on citation analysis and is the only approach to plagiarism detection that does not rely on textual similarity. CbPD examines the citation and reference information in texts to identify similar patterns in the citation sequences. As such, this approach is suitable for scientific texts, or other academic documents that contain citations. Citation analysis to detect plagiarism is a relatively young concept. It has not been adopted by commercial software, but a first prototype of a citation-based plagiarism detection system exists. Similar order and proximity of citations in the examined documents are the main criteria used to compute citation pattern similarities. Citation patterns represent subsequences non-exclusively containing citations shared by the documents compared. Factors, including the absolute number or relative fraction of shared citations in the pattern, as well as the probability that citations co-occur in a document are also considered to quantify the patterns&#x2019; degree of similarity.</p>
+<p><strong>5. Stylometry:</strong> Stylometry subsumes statistical methods for quantifying an author&#x2019;s unique writing style and is mainly used for authorship attribution or intrinsic plagiarism detection. Detecting plagiarism by authorship attribution requires checking whether the writing style of the suspicious document, which is written supposedly by a certain author, matches with that of a corpus of documents written by the same author. Intrinsic plagiarism detection, on the other hand, uncover plagiarism based on internal pieces of evidence in the suspicious document without comparing it with other documents. This is performed by constructing and comparing stylometric models for different text segments of the suspicious document, and passages that are stylistically different from others are marked as potentially plagiarized, Although they are simple to extract, character n-grams are proven to be among the best stylometric features for intrinsic plagiarism detection.</p>
+<p><strong>6. Performance:</strong> Comparative evaluations of content similarity detection systems indicate that their performance depends on the type of plagiarism present (see figure). Except for citation pattern analysis, all detection approaches rely on textual similarity. It is therefore symptomatic that detection accuracy decreases the more plagiarism cases are obfuscated.</p>
+<h2 class="mume-header" id="problems-with-traditional-approaches">Problems with traditional Approaches</h2>
+
+<p>Traditional approaches have several problems, we have explained some of the most prominent ones here.</p>
+<ol>
+<li>Preeminent problem with plagiarism detection using authorship is the sheer number of authors out of which the algorithm needs to decide the actual author of the suspect document.</li>
+<li>In case of  Fingerprinting, if someone plagiarise some part of the document or modify the sementics of the text by either using synonyms or rearranging the text in some way then this method obtains a fairly different Digest for that document and the plagiarism goes undetected from the system and it can&apos;t be used as a reliable tool.</li>
+<li>String Matching has the same issue as with the Fingerprinting, it does not detect any kind of semantic modifications in the text document whatsoever, thus this technique too can not be used reliably.</li>
+<li>Bag of words technique is used as a data preprocessing step for machine learning models, and often to extract stylometric features and other statistics from the generated matrix. Some of the authors used it along with tf-idf to account for rare and frequent words within documents. Problem with BOW is that it produces very large matrix and a lot of the features in the matrix are not useful for the task and thus obscure the decesion boundary. Even when PCA was used to reduce the dimensionality, it proved to be less effective because it does not account for the order of words in a sentence or document. Even if we randomly shuffle the words in a document, the downstream machine learning model would still classify it same as before.</li>
+<li>Citation based methods do not work where the document does not contain citations or if the author choose not to include the document in the citation.</li>
+<li>Stylometry is so far the most interesting method used for detecting plagiarism, but the methods used have not been able to extract features from the document in a way that enables a machine learning model to accurately predict its authorship.</li>
+</ol>
+<h1 class="mume-header" id="literature-review">Literature Review</h1>
+
+<p>The year 2018 has been an inflection point for machine learning models handling text (or more accurately, Natural Language Processing or NLP for short). Our conceptual understanding of how best to represent words and sentences in a way that best captures underlying meanings and relationships is rapidly evolving. Moreover, the NLP community has been putting forward incredibly powerful components that we can freely download and use in your own models (It&#x2019;s been referred to as NLP&#x2019;s ImageNet moment, referencing how years ago similar developments accelerated the development of machine learning in Computer Vision tasks).<br>
+One of the latest milestones in this development is the release of BERT, an event described as marking the beginning of a new era in NLP which is based on the Transformer Architecture published in the popular paper <strong>Attention is all you need</strong>. BERT is a model that broke several records for how well models can handle language-based tasks. Soon after the release of the paper describing the model, the team also open-sourced the code of the model, and made available for download versions of the <strong>model that were already pre-trained on massive datasets</strong>. This is a momentous development since it enables anyone building a machine learning model involving language processing to use this powerhouse as a readily-available component &#x2013; saving the time, energy, knowledge, and resources that would have gone to training a language-processing model from scratch.</p>
+<p>Figure below describes how BERT was trained:</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/bert-transfer-learning.png">
+<p style="color:gray; font-size:13px;">Figure-4: BERT Fine Tuning</p>
+</div>
+BERT builds on top of a number of clever ideas that have been bubbling up in the NLP community recently &#x2013; including but not limited to Semi-supervised Sequence Learning (by Andrew Dai and Quoc Le), ELMo (by Matthew Peters and researchers from AI2 and UW CSE), ULMFiT (by fast.ai founder Jeremy Howard and Sebastian Ruder), the OpenAI transformer (by OpenAI researchers Radford, Narasimhan, Salimans, and Sutskever), and the Transformer (Vaswani et al).
+<p>There are a number of fairly complex concepts one needs to be aware of to properly wrap one&#x2019;s head around what BERT is. So we will explain the BERT model, and give a brief overview of Transformer Architecture and Attention Mechanism only to describe our work and methodolgy.</p>
+<h2 class="mume-header" id="bert-and-transformer-architecture">BERT and Transformer Architecture</h2>
+
+<p>BERT is based on the Transformer Architecture introduced in Attention is all you need paper, transformer is - in a nutshell - an Encoder-Decoder model that uses the Attention Mechanism for language modelling an boosting the speed with which these massive attention-based models can be trained. Transformrs were originally designed to work on Machine Translation tasks.</p>
+<p>The input to the transformer are word-embeddings followed by a positinal encoding which accounts for the order and position of words in a text, without it the model would not be able to distinguish the context in which a word is being used.<br>
+Let&apos;s see why the order matters through an example:<br>
+Even though she did <i style="color:red;">not</i> win the award, she was satisfied.<br>
+Even though she did win the award, she was <i style="color:red;">not</i> satisfied.<br>
+Without the positional encoding, the transformer can not tell the difference between the two sentences.</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/pos-en.png">
+<p style="color:gray; font-size:13px;">Figure-5: Positional Encoding</p>
+</div>
+<p><strong>pos</strong>: Position of a word in the sentence<br>
+<strong>i</strong>: index in Embedding dimension<br>
+<strong>d</strong>: Embedding dimensionality</p>
+<p>The encoded text is then passed into the transformer and it passes throught encoder and decoder blocks to produces the text in the target language.</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/tf-1.png">
+<p style="color:gray; font-size:13px;">Figure-6: Abstract Transformer Architecture</p>
+</div>
+<p>When we unravel the Encoders and Decoders block, they are themselves a stack of multiple encoders and decoders - stack of 6 encoders and decoders was used in the original paper.</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/tf-2.png">
+<p style="color:gray; font-size:13px;">Figure-7: Encoder-Decoder Stacks as a Transformer</p>
+</div>
+<p>If we can understand the encoder, we would easily understand the decoder as it is almost similar to the decoder with some modification. The encoder consists of two moules - <strong>Self Attention</strong> and <strong>Feed Forward</strong><br>
+Additional steps like dropout, layrenorm(or Add &amp; Norm as stated in the diagram) are used for the regularizatio of the model.<br>
+Each of the submodule is connected with the previous module (encoded inputs for the first encoder) with a residual connections(developed by Kaiming and hist team at Microsoft that won the ImageNet challenge) similar to what we see in ResNet or several other CNN based architectures. Residual connection helps in resolving two major problems with a Very Deep Architecture, <strong>Vanishing Gradients</strong> and <strong>Representation Bottleneck</strong>. A residual connecion reinjects the previous representation into the downstream flwo of the data by adding the past output tensor to the later output tensor and thus preventing the information loss during the data flow.</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/tf-3.png">
+<p style="color:gray; font-size:13px;">Figure-7: Encoder-Decoder Submodules</p>
+</div>
+<p>Attention mechanism is the most important part of the transformer. We&apos;ll first explain the attention and then the self-attention.</p>
+<h2 class="mume-header" id="attention">Attention:</h2>
+
+<p>In a conventional RNN model, it takes two inputs at each timestep - current state (hidden units) and previous state(next word in the sequence). To turn words into numbers we use word embeddings which captures the semantic and other information about the word. These embeddings can be either learned with the model or we can used pretrained embeddings like Word2Vec or GloVe which were trained in an unsupervised manner on a huge datasets with millions of words.</p>
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<img src="./plots/embedding.png">
+<p style="color:gray; font-size:13px;">Figure-7: Word Embeddings</p>
+</div>
+<p>In a machine translation task, RNN produces its output by taking into account its current input and previous hidden state. The final encoded output is called the <strong>Context</strong> which is then passed to the decoder which sequentially process the context to generate the target sequence.</p>
+<div style="width: 90%; margin: 0 auto; text-align:center;">
+<img src="./plots/seq-to-seq.png">
+<p style="color:gray; font-size:13px;">Figure-7: Sequence to Sequence Model</p>
+</div>
+<p>The problem with this kind of model is that, the encoded vecotor proved to be a bottleneck and it can not encode a long sequence properly. A solution to this problem was offered by LSTM and GRU models but they did not resolve the problem completely.</p>
+<p><strong>Let&apos;s pay attention now!</strong><br>
+A solution was proposed in Bahdanau et al., 2014 and Luong et al., 2015. These papers introduced and refined a technique called &#x201C;Attention&#x201D;, which highly improved the quality of machine translation systems. Attention allows the model to focus on the relevant parts of the input sequence as needed.</p>
+<h2 class="mume-header" id="overview-of-transformer-architecture">Overview Of Transformer Architecture</h2>
+
+<h3 class="mume-header" id="transformer-architecture">Transformer Architecture</h3>
+
+<h3 class="mume-header" id="residual-connections">Residual Connections</h3>
+
+<h3 class="mume-header" id="attention-mechanism">Attention Mechanism</h3>
+
+<h3 class="mume-header" id="attention-heads">Attention Heads</h3>
+
+<h3 class="mume-header" id="encoder">Encoder</h3>
+
+<h3 class="mume-header" id="decoder">Decoder</h3>
+
+<h3 class="mume-header" id="encoder-decoder-self-attention">Encoder-Decoder self-attention</h3>
+
+<h3 class="mume-header" id="masked-attention">Masked attention</h3>
+
+<h3 class="mume-header" id="tokenization">Tokenization</h3>
+
+<h3 class="mume-header" id="word-embeddings">Word Embeddings</h3>
+
+<h3 class="mume-header" id="positional-embeddings">Positional Embeddings</h3>
+
+<h3 class="mume-header" id="self-attention">Self Attention</h3>
+
+<h2 class="mume-header" id="bert-architecture-overview">BERT Architecture Overview</h2>
+
+<h2 class="mume-header" id="transfer-learning">Transfer Learning</h2>
+
+<h2 class="mume-header" id="dataset-and-libraries">Dataset and Libraries</h2>
+
+<h2 class="mume-header" id="proposed-methodology">Proposed Methodology</h2>
+
+<h3 class="mume-header" id="baseline">Baseline</h3>
+
+<h3 class="mume-header" id="bert-model-fine-tuning">BERT model fine-tuning</h3>
+
+<h1 class="mume-header" id="results">Results</h1>
+
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

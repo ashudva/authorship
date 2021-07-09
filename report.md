@@ -8,23 +8,15 @@
   - [Traditional Approaches](#traditional-approaches)
   - [Problems with traditional Approaches](#problems-with-traditional-approaches)
 - [Literature Review](#literature-review)
-  - [BERT and Transformer Architecture](#bert-and-transformer-architecture)
-  - [Attention:](#attention)
-  - [Overview Of Transformer Architecture](#overview-of-transformer-architecture)
-    - [Transformer Architecture](#transformer-architecture)
-    - [Residual Connections](#residual-connections)
-    - [Attention Mechanism](#attention-mechanism)
-    - [Attention Heads](#attention-heads)
-    - [Encoder](#encoder)
-    - [Decoder](#decoder)
-    - [Encoder-Decoder self-attention](#encoder-decoder-self-attention)
-    - [Masked attention](#masked-attention)
-    - [Tokenization](#tokenization)
-    - [Word Embeddings](#word-embeddings)
-    - [Positional Embeddings](#positional-embeddings)
-    - [Self Attention](#self-attention)
-  - [BERT Architecture Overview](#bert-architecture-overview)
-  - [Transfer Learning](#transfer-learning)
+  - [Transformer](#transformer)
+    - [Architecture](#architecture)
+    - [Attention](#attention)
+    - [Self-Attention](#self-attention)
+      - [Calculating the Self-Attention](#calculating-the-self-attention)
+    - [Multi-Head Attention](#multi-head-attention)
+  - [BERT Architecture](#bert-architecture)
+    - [Pretraining as Masked LM (MLM)](#pretraining-as-masked-lm-mlm)
+    - [Fine-Tuning](#fine-tuning)
   - [Dataset and Libraries](#dataset-and-libraries)
   - [Proposed Methodology](#proposed-methodology)
     - [Baseline](#baseline)
@@ -50,6 +42,7 @@ The goal of intrinsic plagiarism detection is to find passages within a document
 <image src="./plots/intrinsic.jpg">
 <p style="color:gray; font-size:13px;">Figure-1 - Intrinsic plagiarism detection</p>
 </div>
+
 ## Extrinsic Plagiarism Detection
 Extrinsic plagiarism detection is given more information to work with: in addition to a suspicious document, we are also given a number of external documents or source documents to compare to the suspicious document. The extrinsic detection process can be broken into three steps:
 
@@ -99,14 +92,30 @@ Figure below describes how BERT was trained:
 
 <div style="width: 80%; margin: 0 auto; text-align:center;">
 <image src="./plots/bert-transfer-learning.png">
-<p style="color:gray; font-size:13px;">Figure-4: BERT Fine Tuning</p>
+<p style="color:gray; font-size:13px;">Figure-4: BERT Pretraining and Fine Tuning</p>
 </div>
 BERT builds on top of a number of clever ideas that have been bubbling up in the NLP community recently – including but not limited to Semi-supervised Sequence Learning (by Andrew Dai and Quoc Le), ELMo (by Matthew Peters and researchers from AI2 and UW CSE), ULMFiT (by fast.ai founder Jeremy Howard and Sebastian Ruder), the OpenAI transformer (by OpenAI researchers Radford, Narasimhan, Salimans, and Sutskever), and the Transformer (Vaswani et al).
 
-There are a number of fairly complex concepts one needs to be aware of to properly wrap one’s head around what BERT is. So we will explain the BERT model, and give a brief overview of Transformer Architecture and Attention Mechanism only to describe our work and methodolgy.
+There are a number of fairly complex concepts one needs to be aware of to properly wrap one’s head around what BERT is. Since the BERT is a special kind of transformer model so we'll first explain the transformer model and then BERT.
 
-## BERT and Transformer Architecture
-BERT is based on the Transformer Architecture introduced in Attention is all you need paper, transformer is - in a nutshell - an Encoder-Decoder model that uses the Attention Mechanism for language modelling an boosting the speed with which these massive attention-based models can be trained. Transformrs were originally designed to work on Machine Translation tasks.
+## Transformer
+BERT is based on the Transformer Architecture introduced in <i style="color:red;">Attention is all you need </i> paper, transformer is - in a nutshell - an Encoder-Decoder model that uses the Attention Mechanism for language modelling an boosting the speed with which these massive attention-based models can be trained. Transformrs were originally designed to work on Machine Translation tasks.
+In a conventional RNN model, it takes two inputs at each timestep - current state (hidden units) and previous state(next word in the sequence). To turn words into numbers we use word embeddings which captures the semantics and other information about the word. These embeddings can be either learned with the model or we can used pretrained embeddings like Word2Vec or GloVe which were trained in an unsupervised manner on a huge datasets with millions of words.
+<div style="width: 80%; margin: 0 auto; text-align:center;">
+<image src="./plots/embedding.png">
+<p style="color:gray; font-size:13px;">Figure-7: Word Embeddings</p>
+</div>
+
+In a machine translation task using sequence-to-sequence model, RNN produces its output by taking into account its current input and previous hidden state. The final encoded output is called the **Context** which is then passed to the decoder which sequentially process the context to generate the target sequence.
+<div style="width: 90%; margin: 0 auto; text-align:center;">
+<image src="./plots/seq-to-seq.png">
+<p style="color:gray; font-size:13px;">Figure-7: Sequence to Sequence Model</p>
+</div>
+
+The problem with this kind of model is that, the encoded vecotor proved to be a bottleneck and it can not encode a long sequence properly. A solution to this problem was offered by LSTM and GRU models but they did not resolve the problem completely.
+
+Transformer model solves this problem by using Attention Mechanism and eliminating the RNN and LSTM completely from the encoder-decoder architecture.
+### Architecture
 
 The input to the transformer are word-embeddings followed by a positinal encoding which accounts for the order and position of words in a text, without it the model would not be able to distinguish the context in which a word is being used.
 Let's see why the order matters through an example:
@@ -140,76 +149,137 @@ If we can understand the encoder, we would easily understand the decoder as it i
 Additional steps like dropout, layrenorm(or Add & Norm as stated in the diagram) are used for the regularizatio of the model.
 Each of the submodule is connected with the previous module (encoded inputs for the first encoder) with a residual connections(developed by Kaiming and hist team at Microsoft that won the ImageNet challenge) similar to what we see in ResNet or several other CNN based architectures. Residual connection helps in resolving two major problems with a Very Deep Architecture, **Vanishing Gradients** and **Representation Bottleneck**. A residual connecion reinjects the previous representation into the downstream flwo of the data by adding the past output tensor to the later output tensor and thus preventing the information loss during the data flow.
 
+The output of each encoder sublayer is **$LayerNorm\big(x + SubLayer\small(x\small)\big)$** where **$SubLayer\small(x)$** is the function implemented by the corresponding sub-layer. To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension **$d_{model}$**.
+
 <div style="width: 80%; margin: 0 auto; text-align:center;">
 <image src="./plots/tf-3.png">
 <p style="color:gray; font-size:13px;">Figure-7: Encoder-Decoder Submodules</p>
 </div>
 
 Attention mechanism is the most important part of the transformer. We'll first explain the attention and then the self-attention.
-
-## Attention:
-In a conventional RNN model, it takes two inputs at each timestep - current state (hidden units) and previous state(next word in the sequence). To turn words into numbers we use word embeddings which captures the semantic and other information about the word. These embeddings can be either learned with the model or we can used pretrained embeddings like Word2Vec or GloVe which were trained in an unsupervised manner on a huge datasets with millions of words.
-<div style="width: 80%; margin: 0 auto; text-align:center;">
-<image src="./plots/embedding.png">
-<p style="color:gray; font-size:13px;">Figure-7: Word Embeddings</p>
-</div>
-
-In a machine translation task using sequence-to-sequence model, RNN produces its output by taking into account its current input and previous hidden state. The final encoded output is called the **Context** which is then passed to the decoder which sequentially process the context to generate the target sequence.
-<div style="width: 90%; margin: 0 auto; text-align:center;">
-<image src="./plots/seq-to-seq.png">
-<p style="color:gray; font-size:13px;">Figure-7: Sequence to Sequence Model</p>
-</div>
-
-The problem with this kind of model is that, the encoded vecotor proved to be a bottleneck and it can not encode a long sequence properly. A solution to this problem was offered by LSTM and GRU models but they did not resolve the problem completely.
-
-**Let's pay attention now!**
-A solution was proposed in Bahdanau et al., 2014 and Luong et al., 2015. These papers introduced and refined a technique called “Attention”, which highly improved the quality of machine translation systems. Attention allows the model to focus on the relevant parts of the input sequence as needed.
+### Attention 
+Attention mechanism was first used in seq-to-seq models for machine translation. Before that seq-to-seq models used a combination of RNN, CNN, LSTM, and GRU and were very successful at this task, in 2016 Google started using them in Google Translate and other applications.
+A solution to problems with seq-to-seq models using the recurrence was proposed in [Bahdanau et al., 2014 and Luong et al., 2015]. These papers introduced and refined a technique called “Attention”, which highly improved the quality of machine translation systems. Attention allows the model to focus on the relevant parts of the input sequence as needed.
 
 An attention model differs from a classic sequence-to-sequence model in two main ways:
-First, the encoder passes a lot more data to the decoder. Instead of passing the last hidden state of the encoding stage, the encoder passes all the hidden states to the decoder:
+First, the encoder passes a lot more data to the decoder. Instead of simply passing the last hidden state of the encoding stage, the encoder passes all the hidden states to the decoder:
 <div style="width: 100%; margin: 0 auto; text-align:center;">
 <image src="./plots/sqs-1.png">
 <p style="color:gray; font-size:13px;">Figure-7: Sequence to Sequence Model</p>
 </div>
 
-Second, an attention decoder does an extra step before producing its output. In order to focus on the parts of the input that are relevant to this decoding time step, the decoder does the following:
+Second, an attention decoder does an extra step - calculate the attention on its input - before producing its output. In order to focus on the parts of the input that are relevant to this decoding at a certain time step.
+The decoder does the following:
+1. Look at the set of encoder hidden states it received
+2. Give each hidden states a score as each hidden-state is most associated with certain word in the input sentence.
+3. Take the softmax of these socres and use them as weights.
+4. Multiply each hidden states by its softmaxed score, thus amplifying hidden states with high scores, and drowning out hidden states with low scores
+5. Take the weighted sum of the input hidden-states
+6. The scoring is done at each time step.
 
-1. Look at the set of encoder hidden states it received – each encoder hidden states is most associated with a certain word in the input sentence
-2. Give each hidden states a score 
-3. Multiply each hidden states by its softmaxed score, thus amplifying hidden states with high scores, and drowning out hidden states with low scores
+Note that the model isn’t just mindless aligning the first word at the output with the first word from the input. It actually learned from the training phase how to align words in that language pair (French and English in our example). An example for how precise this mechanism can be comes from the attention papers listed above:
 
-## Overview Of Transformer Architecture
+<div style="width: 40%; margin: 0 auto; text-align:center;">
+<image src="./plots/tf-4.png">
+<p style="color:gray; font-size:13px; padding-left:70px;">Figure-8: Attention</p>
+</div>
+<p style="color:gray; font-size:13px; padding-left:70px;">It's evident from the figure that the model paid attention correctly when outputing "European Economic Area". In French, the order of these words is reversed ("européenne économique zone") as compared to English. Every other word in the sentence is in similar order</p>
 
-### Transformer Architecture
+### Self-Attention
+It's almost similar to how attention mechanism works. To get a high level overview of self-attention and to see why it works so well, let's say we want to translate a sentence from english to a target language-
 
-### Residual Connections
+"I was working on a project, and it turned out to be a fiasco."
 
-### Attention Mechanism
+If we were to translate this sentence, we know that the words <i style="color:red;">'it'</i> and <i style="color:red;">'fiasco'</i> are related to the word <i style="color:red;">'project'</i>. There are several such relationship between words in a sentence that we need to pay *attention* to while translation. Attention mechanism uses this simple idea of paying attention to relevent words while translating a sequence by assigning a score to other words of the input sentence. Model uses these scores(We'll explain how to calculate these in the next section) to decide the parts of the input to focus on.
 
-### Attention Heads
+We as humans can form these association very easily but it's not so easy for an algorithm. Self-attention allows the word <i style="color:red;">'it'</i> with <i style="color:red;">'project'</i>. *Self-attention also allows the encoder to capture both the left and right context in a sentence* which leads to better encodings for the sequence.
 
-### Encoder
+#### Calculating the Self-Attention
+It involves three weight matrices (which are learned during teh training process).
+1. Quries
+2. Keys
+3. Values
 
-### Decoder
+Steps to calculate self-attention -
+1. Turn the input words into embeddings
+2. Calculate the scores
+3. Divide the socres by **$\sqrt d_k$**, where **$d_k$** is dimentionality of *key vectors*. This step leads to more stable gradients.
+4. Apply Softmax to the scores
+5. Take weighted sum of the value vectors.
 
-### Encoder-Decoder self-attention
+The intuition for the final step is that we want to keep the values of the words which are relevent and discard/drown the values of the irrelevent words.
 
-### Masked attention
+The final equation for calculating the self-attention:
+**$$Attention(Q,K,V)=softmax(\cfrac{QK^T}{\sqrt{d_k}}).V$$**
 
-### Tokenization
+<div style="width: 20%; margin: 0 auto; text-align:center;">
+<image src="./plots/self-attention.png">
+<p style="color:gray; font-size:13px;">Figure-9: Self-Attention</p>
+</div>
 
-### Word Embeddings
+The operations are performed in the matrix form for two reasons:
+1. Process the entire input sequence at once
+2. Using the matrix multiplication for faster parallel computation
+### Multi-Head Attention
+The attention mechanism significantly reduced the representational bottleneck posed by the RNN or LSTM seq-to-seq architecture but one of the problem with them still needed to tackeled with i.e. <i style="color:blue">*these models still learned in a sequential manner*</i> and therefore the learning process took a significant amount of time and resources. The transformer architecture address this problem with removing RNN or LSTM completely from the model architecture and using only self-attention for encoding and decoding tasks.
 
-### Positional Embeddings
+Instead of performing a single attention function with $d_{model}-dimensional$ keys, values and queries, it is beneficial to linearly project the queries, keys and values $h$ times with different, learned linear projections to $d_k$ ,$d_k$ and $d_v$*dimensions, respectively. On each of these projected versions of queries, keys and values we then perform the attention function in parallel, yielding $d_v-dimentional$ output values. These are concatenated and once again projected, resulting in the final values, as depicted in Figure-10. Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.
 
-### Self Attention
+**$$\begin{array}{cc}
+  MultiHead(Q, K, V) = Concat(head_1,....,head_h)W^o \\
+  head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)
+\end{array}$$**
+Where the projections are parameter matrices $W_i^Q \in \mathbb{R}^{d_{model}\times d_k}$, $W_i^K \in \mathbb{R}^{d_{model}\times d_k}$, $W_i^V \in \mathbb{R}^{d_{model}\times d_v}$, and $W_i^O \in \mathbb{R}^{hd_v\times d_{model}}$
+<div style="width: 40%; margin: 0 auto; text-align:center;">
+<image src="./plots/mh-attention.png">
+<p style="color:gray; font-size:13px;">Figure-10: Multi-Head Self-Attention</p>
+</div>
 
-## BERT Architecture Overview
+e.g, If $d_{model} = 512$ and $h = 8$ then self-attention layer will output 8-attention vectors of **$d_v = d_k = \cfrac{d_{model}}{h} = 64$**. Then all of the attention vectors are concatenated to form a $d_{model}-dimensional$ vector.
 
-## Transfer Learning
+Multi-Head Attention enhances the model in following ways:
+1. If z1 is attention of first word in the sentence, it contains encoding for every word in the sentence but it could be dominated by the word itself.
+2. It increases the representational power of the encoded vectors as each attention head has its own set of querys, keys, and values weight matrices.
+3. Multiple heads can be processed in parallel laveraging the compute capability of modern hardware.
+4. Multi-Head attention allows the model to have large number of parameters and makes the learning process much more efficient and faster.
+
+## BERT Architecture
+The original paper from Google presents two model sizes for BERT:
+BERT BASE – Comparable in size to the OpenAI Transformer in order to compare performance.
+BERT LARGE – A ridiculously huge model which achieved the state of the art results reported in the paper.
+<i style="color:blue">BERT is basically a trained Transformer Encoder stack</i>.The previous section already described the Transformer model – a foundational concept for BERT.
+<div style="width: 100%; margin: 0 auto; text-align:center;">
+<image src="./plots/bert.png">
+<p style="color:gray; font-size:13px;">Figure-11: BERT High Level Architecture</p>
+</div>
+Both BERT model sizes have a large number of encoder layers (which the paper calls Transformer Blocks) – twelve for the Base version, and twenty four for the Large version. These also have larger feedforward-networks (768 and 1024 hidden units respectively), and more attention heads (12 and 16 respectively) than the default configuration in the reference implementation of the Transformer in the initial paper (6 encoder layers, 512 hidden units, and 8 attention heads).
+
+The first input token is supplied with a special [CLS] token for reasons that will become apparent later on. CLS here stands for Classification. Just like the vanilla encoder of the transformer, BERT takes a sequence of words as input which keep flowing up the stack. Each layer applies self-attention, and passes its results through a feed-forward network, and then hands it off to the next encoder.
+### Pretraining as Masked LM (MLM)
+BERT is pretrained using massive amounts of data and computational power as Masked Language model. Before feeding word sequences into BERT, 15% of the words in each sequence are replaced with a [MASK] token. The model then attempts to predict the original value of the masked words, based on the context provided by the other, non-masked, words in the sequence. In technical terms, the prediction of the output words requires:
+1. Adding a classification layer on top of the encoder output.
+2. Multiplying the output vectors by the embedding matrix, transforming them into the vocabulary dimension.
+3. Calculating the probability of each word in the vocabulary with softmax.
+
+### Fine-Tuning
+Fine-tuning is considered as Transfer learning (TL) which is a research problem in machine learning (ML) that focuses on storing knowledge gained while solving one problem and applying it to a different but related problem. For example, knowledge gained while learning to recognize cars could apply when trying to recognize trucks. This area of research bears some relation to the long history of psychological literature on transfer of learning, although formal ties between the two fields are limited. From the practical standpoint, reusing or transferring information from previously learned tasks for the learning of new tasks has the potential to significantly improve the sample efficiency of a reinforcement learning agent.
+
+**How to fine-tune BERT**
+Using BERT for a specific task is relatively straightforward:
+BERT can be used for a wide variety of language tasks, while only adding a small layer to the core model:
+1. Classification tasks such as sentiment analysis are done similarly to Next Sentence classification, by adding a classification layer on top of the Transformer output for the [CLS] token.
+2. In Question Answering tasks (e.g. SQuAD v1.1), the software receives a question regarding a text sequence and is required to mark the answer in the sequence. Using BERT, a Q&A model can be trained by learning two extra vectors that mark the beginning and the end of the answer.
+3. In Named Entity Recognition (NER), the software receives a text sequence and is required to mark the various types of entities (Person, Organization, Date, etc) that appear in the text. Using BERT, a NER model can be trained by feeding the output vector of each token into a classification layer that predicts the NER label.
+
+In our project, we are only concerned with Classification Fine-Tuning.
 
 ## Dataset and Libraries
+In our project, we have used two datasets -
+**1. C50 Dataset:** The dataset is the subset of RCV1. These corpus has already been used in author identification experiments. In the top 50 authors (with respect to total size of articles) were selected. 50 authors of texts labeled with at least one subtopic of the class CCAT(corporate/industrial) were selected.That way, it is attempted to minimize the topic factor in distinguishing among the texts. The training corpus consists of 2,500 texts (50 per author) and the test corpus includes other 2,500 texts (50 per author) non-overlapping with the training texts.
+**2.PAN 2014:**  Dataset consists of training corpus that comprises a set of author verification problems in several languages/genres. Each problem consists of some (up to five) known documents by a single person and exactly one questioned document. All documents within a single problem instance will be in the same language and best efforts are applied to assure that within-problem documents are matched for genre, register, theme, and date of writing. The document lengths vary from a few hundred to a few thousand words. For our project, we have only used the documents in English Language.
 
+**Libraries Used**:
+Predominantly we have 
 ## Proposed Methodology
 
 ### Baseline

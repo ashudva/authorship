@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <link rel="stylesheet" href="file:////home/ashish/.vscode-insiders/extensions/shd101wyy.markdown-preview-enhanced-0.5.21/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      <link rel="stylesheet" href="file:////home/ashish/.vscode-insiders/extensions/shd101wyy.markdown-preview-enhanced-0.5.22/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
       
       
       
@@ -289,19 +289,22 @@ pre[data-line] .line-highlight[data-end]:after {
 </li>
 <li><a href="#bert-architecture">BERT Architecture</a>
 <ul>
-<li><a href="#pretraining-as-masked-lm-mlm">Pretraining as Masked LM (MLM)</a></li>
+<li><a href="#bert-input">BERT Input</a></li>
+<li><a href="#tokenization">Tokenization</a>
+<ul>
+<li><a href="#subword-tokenization">Subword Tokenization</a></li>
+<li><a href="#byte-pair-encoding-bpe">Byte-Pair Encoding (BPE)</a></li>
+<li><a href="#wordpiece">WordPiece</a></li>
+</ul>
+</li>
+<li><a href="#masked-language-model-mlm">Masked Language Model (MLM)</a></li>
 <li><a href="#fine-tuning">Fine-Tuning</a></li>
 </ul>
 </li>
+</ul>
+</li>
 <li><a href="#dataset-and-libraries">Dataset and Libraries</a></li>
-<li><a href="#proposed-methodology">Proposed Methodology</a>
-<ul>
-<li><a href="#baseline">Baseline</a></li>
-<li><a href="#bert-model-fine-tuning">BERT model fine-tuning</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#proposed-methodology">Proposed Methodology</a></li>
 <li><a href="#results">Results</a></li>
 </ul>
 <h1 class="mume-header" id="abstract">Abstract</h1>
@@ -375,7 +378,7 @@ BERT builds on top of a number of clever ideas that have been bubbling up in the
 <p>There are a number of fairly complex concepts one needs to be aware of to properly wrap one&#x2019;s head around what BERT is. Since the BERT is a special kind of transformer model so we&apos;ll first explain the transformer model and then BERT.</p>
 <h2 class="mume-header" id="transformer">Transformer</h2>
 
-<p>BERT is based on the Transformer Architecture introduced in <i style="color:red;">Attention is all you need </i> paper, transformer is - in a nutshell - an Encoder-Decoder model that uses the Attention Mechanism for language modelling an boosting the speed with which these massive attention-based models can be trained. Transformrs were originally designed to work on Machine Translation tasks.<br>
+<p>BERT is based on the Transformer Architecture introduced in <i style="color:tomato;">Attention is all you need </i> paper, transformer is - in a nutshell - an Encoder-Decoder model that uses the Attention Mechanism for language modelling an boosting the speed with which these massive attention-based models can be trained. Transformrs were originally designed to work on Machine Translation tasks.<br>
 In a conventional RNN model, it takes two inputs at each timestep - current state (hidden units) and previous state(next word in the sequence). To turn words into numbers we use word embeddings which captures the semantics and other information about the word. These embeddings can be either learned with the model or we can used pretrained embeddings like Word2Vec or GloVe which were trained in an unsupervised manner on a huge datasets with millions of words.</p>
 <div style="width: 80%; margin: 0 auto; text-align:center;">
 <img src="./plots/embedding.png">
@@ -392,8 +395,8 @@ In a conventional RNN model, it takes two inputs at each timestep - current stat
 
 <p>The input to the transformer are word-embeddings followed by a positinal encoding which accounts for the order and position of words in a text, without it the model would not be able to distinguish the context in which a word is being used.<br>
 Let&apos;s see why the order matters through an example:<br>
-Even though she did <i style="color:red;">not</i> win the award, she was satisfied.<br>
-Even though she did win the award, she was <i style="color:red;">not</i> satisfied.<br>
+Even though she did <i style="color:tomato;">not</i> win the award, she was satisfied.<br>
+Even though she did win the award, she was <i style="color:tomato;">not</i> satisfied.<br>
 Without the positional encoding, the transformer can not tell the difference between the two sentences.</p>
 <div style="width: 80%; margin: 0 auto; text-align:center;">
 <img src="./plots/pos-en.png">
@@ -451,8 +454,8 @@ The decoder does the following:</p>
 
 <p>It&apos;s almost similar to how attention mechanism works. To get a high level overview of self-attention and to see why it works so well, let&apos;s say we want to translate a sentence from english to a target language-</p>
 <p>&quot;I was working on a project, and it turned out to be a fiasco.&quot;</p>
-<p>If we were to translate this sentence, we know that the words <i style="color:red;">&apos;it&apos;</i> and <i style="color:red;">&apos;fiasco&apos;</i> are related to the word <i style="color:red;">&apos;project&apos;</i>. There are several such relationship between words in a sentence that we need to pay <em>attention</em> to while translation. Attention mechanism uses this simple idea of paying attention to relevent words while translating a sequence by assigning a score to other words of the input sentence. Model uses these scores(We&apos;ll explain how to calculate these in the next section) to decide the parts of the input to focus on.</p>
-<p>We as humans can form these association very easily but it&apos;s not so easy for an algorithm. Self-attention allows the word <i style="color:red;">&apos;it&apos;</i> with <i style="color:red;">&apos;project&apos;</i>. <em>Self-attention also allows the encoder to capture both the left and right context in a sentence</em> which leads to better encodings for the sequence.</p>
+<p>If we were to translate this sentence, we know that the words <i style="color:tomato;">&apos;it&apos;</i> and <i style="color:tomato;">&apos;fiasco&apos;</i> are related to the word <i style="color:tomato;">&apos;project&apos;</i>. There are several such relationship between words in a sentence that we need to pay <em>attention</em> to while translation. Attention mechanism uses this simple idea of paying attention to relevent words while translating a sequence by assigning a score to other words of the input sentence. Model uses these scores(We&apos;ll explain how to calculate these in the next section) to decide the parts of the input to focus on.</p>
+<p>We as humans can form these association very easily but it&apos;s not so easy for an algorithm. Self-attention allows the word <i style="color:tomato;">&apos;it&apos;</i> with <i style="color:tomato;">&apos;project&apos;</i>. <em>Self-attention also allows the encoder to capture both the left and right context in a sentence</em> which leads to better encodings for the sequence.</p>
 <h4 class="mume-header" id="calculating-the-self-attention">Calculating the Self-Attention</h4>
 
 <p>It involves three weight matrices (which are learned during teh training process).</p>
@@ -529,14 +532,65 @@ Where the projections are parameter matrices <span class="katex"><span class="ka
 <p>The original paper from Google presents two model sizes for BERT:<br>
 BERT BASE &#x2013; Comparable in size to the OpenAI Transformer in order to compare performance.<br>
 BERT LARGE &#x2013; A ridiculously huge model which achieved the state of the art results reported in the paper.<br>
-<i style="color:blue">BERT is basically a trained Transformer Encoder stack</i>.The previous section already described the Transformer model &#x2013; a foundational concept for BERT.</p>
+<i style="color:blue">BERT is basically a pretrained Transformer Encoder stack</i>.The previous section already described the Transformer model &#x2013; a foundational concept for BERT.</p>
 <div style="width: 100%; margin: 0 auto; text-align:center;">
 <img src="./plots/bert.png">
 <p style="color:gray; font-size:13px;">Figure-11: BERT High Level Architecture</p>
 </div>
 Both BERT model sizes have a large number of encoder layers (which the paper calls Transformer Blocks) &#x2013; twelve for the Base version, and twenty four for the Large version. These also have larger feedforward-networks (768 and 1024 hidden units respectively), and more attention heads (12 and 16 respectively) than the default configuration in the reference implementation of the Transformer in the initial paper (6 encoder layers, 512 hidden units, and 8 attention heads).
-<p>The first input token is supplied with a special [CLS] token for reasons that will become apparent later on. CLS here stands for Classification. Just like the vanilla encoder of the transformer, BERT takes a sequence of words as input which keep flowing up the stack. Each layer applies self-attention, and passes its results through a feed-forward network, and then hands it off to the next encoder.</p>
-<h3 class="mume-header" id="pretraining-as-masked-lm-mlm">Pretraining as Masked LM (MLM)</h3>
+<h3 class="mume-header" id="bert-input">BERT Input</h3>
+
+<p>BERT is significantly different from the original transformer in how it preprocess the text data.<br>
+General Text Preprocessing Steps:</p>
+<ol>
+<li>Standardization: this step involves removing special symbols, strip white space and convert into uniform encoding.</li>
+<li>Tokenization: using a certain tokenization algorithm, the text is then converted into tokens which could be words, bytes, n-grams, or subwords. Different transformer models use different tokenization algorithm, BERT uses WordPiece and GPT-2 uses Byte-Level BytePairEncoding.</li>
+<li>Vectorization: the final step of text preprocessing is to convert the tokens generated from tokenization step into numerical vectors to pass them into the model. This is done using embedding method which is described earlier.</li>
+</ol>
+<p>In addition to these three steps, BERT adds some special tokens in the input sequence which are used later during the fine-tuning process.<br>
+Special tokens used by BERT:</p>
+<ol>
+<li>[CLS] - The first input token is supplied with a special [CLS]. CLS here stands for Classification. When we want to fine-tune the BERT for the downstream task of text-classification, we use the hidden states for [CLS] token as features and then train a classification head on top of these features.</li>
+<li>[SEP] - This token is used to specify the sentence seperation, an is useful when working on NLG(Natural Language Generation) task.</li>
+<li>[UNK] - Used when the token symbol is not present is the tokenizer vocabulary.</li>
+<li>[MASK] - BERT model is pretrained as Masked Language Model, i.e. during pretraining, 15% of the words in text are replaced with [MASK] and the goal of the model is to predict these tokens.</li>
+</ol>
+<h3 class="mume-header" id="tokenization">Tokenization</h3>
+
+<p>Tokenization is the process of splitting a sentence into tokens, and there are multiple ways to do so. For example,<br>
+<i style="color:#6670FF">&quot;Don&apos;t you like Transformers? We sure do.&quot;</i><br>
+One way to perform tokenization is to simply split the sentence at white space:<br>
+[ <i style="color:#6670FF">&quot;Don&apos;t&quot;, &quot;you&quot;, &quot;like&quot;, &quot;Transformers?&quot;, &quot;We&quot;, &quot;sure&quot;, &quot;do.&quot;</i> ]</p>
+<p>If we look at the tokens &quot;Transformers?&quot; and &quot;do.&quot;, we notice that the punctuation is attached to the words &quot;Transformer&quot; and &quot;do&quot;, which is suboptimal. We should take the punctuation into account so that a model does not have to learn a different representation of a word and every possible punctuation symbol that could follow it, which would explode the number of representations the model has to learn.<br>
+Taking punctuation into account, tokenizing our exemplary text would give:<br>
+[ <i style="color:#6670FF">&quot;Don&quot;, &quot;&apos;&quot;, &quot;t&quot;, &quot;you&quot;, &quot;like&quot;, &quot;Transformers&quot;, &quot;?&quot;, &quot;We&quot;, &quot;sure&quot;, &quot;do&quot;, &quot;.&quot; </i>]</p>
+<p>Even though this is better, but it is still disadvantageous, how the tokenization deal with the word &quot;Don&apos;t&quot;. &quot;Don&apos;t&quot; stands for &quot;do not&quot;, so it would be better tokenized as [&quot;Do&quot;, &quot;n&apos;t&quot;]. This is where things start getting complicated, and part of the reason each model has its own tokenizer type. Depending on the rules we apply for tokenizing a text, a different tokenized output is generated for the same text. A pretrained model only performs properly if you feed it an input that was tokenized with the same rules that were used to tokenize its training data.</p>
+<h4 class="mume-header" id="subword-tokenization">Subword Tokenization</h4>
+
+<p>Transformer models use a hybrid between word-level and character-level tokenization called subword tokenization that rely on the principle that frequently used words should not be split into smaller subwords, but rare words should be decomposed into meaningful subwords. For instance &quot;annoyingly&quot; might be considered a rare word and could be decomposed into &quot;annoying&quot; and &quot;ly&quot;. Both &quot;annoying&quot; and &quot;ly&quot; as stand-alone subwords would appear more frequently while at the same time the meaning of &quot;annoyingly&quot; is kept by the composite meaning of &quot;annoying&quot; and &quot;ly&quot;. This is especially useful in agglutinative languages such as Turkish, where you can form (almost) arbitrarily long complex words by stringing together subwords.</p>
+<p>Subword tokenization allows the model to have a reasonable vocabulary size while being able to learn meaningful context-independent representations. In addition, subword tokenization enables the model to process words it has never seen before, by decomposing them into known subwords. For instance, the BERT-Tokenizer tokenizes &quot;I have a new GPU!&quot; as follows:<br>
+[ <i style="color:#6670FF">&quot;i&quot;, &quot;have&quot;, &quot;a&quot;, &quot;new&quot;, &quot;gp&quot;, &quot;##u&quot;, &quot;!&quot;</i>]</p>
+<p>The tokenizer splits &quot;gpu&quot; into known subwords: [ &quot;gp&quot; and &quot;##u&quot; ]. &quot;##&quot; means that the rest of the token should be attached to the previous one, without space (for decoding or reversal of the tokenization).</p>
+<h4 class="mume-header" id="byte-pair-encoding-bpe">Byte-Pair Encoding (BPE)</h4>
+
+<p>Byte-Pair Encoding (BPE) was introduced in Neural Machine Translation of Rare Words with Subword Units (Sennrich et al., 2015). BPE relies on a pre-tokenizer that splits the training data into words. Pretokenization can be as simple as space tokenization, e.g. GPT-2, Roberta. More advanced pre-tokenization include rule-based tokenization, e.g. XLM, FlauBERT which uses Moses for most languages.</p>
+<p>After pre-tokenization, a set of unique words has been created and the frequency of each word it occurred in the training data has been determined. Next, BPE creates a base vocabulary consisting of all symbols that occur in the set of unique words and <i style="color:tomato">learns merge rules to form a new symbol from two symbols of the base vocabulary</i>. It does so until the vocabulary has attained the desired vocabulary size. Note that the desired vocabulary size is a hyperparameter to define before training the tokenizer.</p>
+<p>As an example, let&#x2019;s assume that after pre-tokenization, the following set of words including their frequency has been determined:</p>
+<p>(<i style="color:#6670FF">&quot;hug&quot;, 10</i>), (<i style="color:#6670FF">&quot;pug&quot;, 5</i>), (<i style="color:#6670FF">&quot;pun&quot;, 12</i>), (<i style="color:#6670FF">&quot;bun&quot;, 4</i>), (<i style="color:#6670FF">&quot;hugs&quot;, 5</i>)<br>
+Consequently, the base vocabulary is [  <i style="color:#6670FF">&quot;b&quot;, &quot;g&quot;, &quot;h&quot;, &quot;n&quot;, &quot;p&quot;, &quot;s&quot;, &quot;u&quot; </i>]. Splitting all words into symbols of the base vocabulary, we obtain:</p>
+<p>(<i style="color:#6670FF">&quot;h&quot; &quot;u&quot; &quot;g&quot;, 10</i>), (<i style="color:#6670FF">&quot;p&quot; &quot;u&quot; &quot;g&quot;, 5</i>), (<i style="color:#6670FF">&quot;p&quot; &quot;u&quot; &quot;n&quot;, 12</i>), (<i style="color:#6670FF">&quot;b&quot; &quot;u&quot; &quot;n&quot;, 4</i>), (<i style="color:#6670FF">&quot;h&quot; &quot;u&quot; &quot;g&quot; &quot;s&quot;, 5</i>)<br>
+BPE then counts the frequency of each possible symbol pair and picks the symbol pair that occurs most frequently. In the example above &quot;h&quot; followed by &quot;u&quot; is present 10 + 5 = 15 times (10 times in the 10 occurrences of &quot;hug&quot;, 5 times in the 5 occurrences of &#x201C;hugs&#x201D;). However, the most frequent symbol pair is &quot;u&quot; followed by &#x201C;g&#x201D;, occurring 10 + 5 + 5 = 20 times in total. Thus, the first merge rule the tokenizer learns is to group all &quot;u&quot; symbols followed by a &quot;g&quot; symbol together. Next, &#x201C;ug&#x201D; is added to the vocabulary. The set of words then becomes</p>
+<p>(<i style="color:#6670FF">&quot;h&quot; &quot;ug&quot;, 10</i>), (<i style="color:#6670FF">&quot;p&quot; &quot;ug&quot;, 5</i>), (<i style="color:#6670FF">&quot;p&quot; &quot;u&quot; &quot;n&quot;, 12</i>), (<i style="color:#6670FF">&quot;b&quot; &quot;u&quot; &quot;n&quot;, 4)</i>, (<i style="color:#6670FF">&quot;h&quot; &quot;ug&quot; &quot;s&quot;, 5</i>)<br>
+BPE then identifies the next most common symbol pair. It&#x2019;s &quot;u&quot; followed by &quot;n&quot;, which occurs 16 times. &quot;u&quot;, &quot;n&quot; is merged to &quot;un&quot; and added to the vocabulary. The next most frequent symbol pair is &quot;h&quot; followed by &quot;ug&quot;, occurring 15 times. Again the pair is merged and &quot;hug&quot; can be added to the vocabulary.</p>
+<p>At this stage, the vocabulary is [ <i style="color:#6670FF">&quot;b&quot;, &quot;g&quot;, &quot;h&quot;, &quot;n&quot;, &quot;p&quot;, &quot;s&quot;, &quot;u&quot;, &quot;ug&quot;, &quot;un&quot;, &quot;hug&quot; </i>] and our set of unique words is represented as</p>
+<p>(<i style="color:#6670FF">&quot;hug&quot;, 10</i>), (<i style="color:#6670FF">&quot;p&quot; &quot;ug&quot;, 5</i>), (<i style="color:#6670FF">&quot;p&quot; &quot;un&quot;, 12</i>), (<i style="color:#6670FF">&quot;b&quot; &quot;un&quot;, 4</i>), (<i style="color:#6670FF">&quot;hug&quot; &quot;s&quot;, 5</i>)</p>
+<p>Assuming, that the Byte-Pair Encoding training would stop at this point, the learned merge rules would then be applied to new words (as long as those new words do not include symbols that were not in the base vocabulary). For instance, the word &quot;bug&quot; would be tokenized to [&quot;b&quot;, &quot;ug&quot;] but &quot;mug&quot; would be tokenized as [&quot;<unk>&quot;, &quot;ug&quot;] since the symbol &quot;m&quot; is not in the base vocabulary. In general, single letters such as &quot;m&quot; are not replaced by the &quot;<unk>&quot; symbol because the training data usually includes at least one occurrence of each letter, but it is likely to happen for very special characters like emojis.</unk></unk></p>
+<p>As mentioned earlier, the vocabulary size, i.e. the base vocabulary size + the number of merges, is a hyperparameter to choose. For instance GPT has a vocabulary size of 40,478 since they have 478 base characters and chose to stop training after 40,000 merges.</p>
+<h4 class="mume-header" id="wordpiece">WordPiece</h4>
+
+<p>BERT uses WordPiece algorithm for tokenization of the text, which was introduced in Japanese and Korean Voice Search (Schuster et al., 2012). <i style="color:tomato">WordPiece is the subword tokenization algorithm used for BERT</i>, DistilBERT. The algorithm is very similar to BPE. WordPiece first initializes the vocabulary to include every character present in the training data and progressively learns a given number of merge rules. In contrast to BPE, WordPiece does not choose the most frequent symbol pair, but the one that maximizes the likelihood of the training data once added to the vocabulary.</p>
+<p>Referring to the previous example, maximizing the likelihood of the training data is equivalent to finding the symbol pair, whose probability divided by the probabilities of its first symbol followed by its second symbol is the greatest among all symbol pairs. E.g. &quot;u&quot;, followed by &quot;g&quot; would have only been merged if the probability of &quot;ug&quot; divided by &quot;u&quot;, &quot;g&quot; would have been greater than for any other symbol pair. Intuitively, WordPiece is slightly different to BPE in that it evaluates what it loses by merging two symbols to make ensure it&#x2019;s worth it.</p>
+<h3 class="mume-header" id="masked-language-model-mlm">Masked Language Model (MLM)</h3>
 
 <p>BERT is pretrained using massive amounts of data and computational power as Masked Language model. Before feeding word sequences into BERT, 15% of the words in each sequence are replaced with a [MASK] token. The model then attempts to predict the original value of the masked words, based on the context provided by the other, non-masked, words in the sequence. In technical terms, the prediction of the output words requires:</p>
 <ol>
@@ -546,7 +600,7 @@ Both BERT model sizes have a large number of encoder layers (which the paper cal
 </ol>
 <h3 class="mume-header" id="fine-tuning">Fine-Tuning</h3>
 
-<p>Fine-tuning is considered as Transfer learning (TL) which is a research problem in machine learning (ML) that focuses on storing knowledge gained while solving one problem and applying it to a different but related problem. For example, knowledge gained while learning to recognize cars could apply when trying to recognize trucks. This area of research bears some relation to the long history of psychological literature on transfer of learning, although formal ties between the two fields are limited. From the practical standpoint, reusing or transferring information from previously learned tasks for the learning of new tasks has the potential to significantly improve the sample efficiency of a reinforcement learning agent.</p>
+<p>Fine-tuning is considered as Transfer learning (TL) which is a research problem in machine learning (ML) that focuses on storing knowledge gained while solving one problem and applying it to a different but related problem. For example, knowledge gained while learning to recognize cars could apply when trying to recognize trucks. This area of research bears some relation to the long history of psychological literature on transfer of learning, although formal ties between the two fields are limited. From the practical standpoint, reusing or transferring information from previously learned tasks for the learning of new tasks has the potential to significantly improve the sample efficiency of a reinforcement learning agent. Fine-Tuning has proved to be very successful in the Computer-Vision tasks, where models like &quot;EfficientNet&quot;, &quot;ResNet&quot;, &quot;Inception&quot;, &quot;Exception&quot; are being constantly used for fine-tuning on a downstream taks.</p>
 <p><strong>How to fine-tune BERT</strong><br>
 Using BERT for a specific task is relatively straightforward:<br>
 BERT can be used for a wide variety of language tasks, while only adding a small layer to the core model:</p>
@@ -556,18 +610,21 @@ BERT can be used for a wide variety of language tasks, while only adding a small
 <li>In Named Entity Recognition (NER), the software receives a text sequence and is required to mark the various types of entities (Person, Organization, Date, etc) that appear in the text. Using BERT, a NER model can be trained by feeding the output vector of each token into a classification layer that predicts the NER label.</li>
 </ol>
 <p>In our project, we are only concerned with Classification Fine-Tuning.</p>
-<h2 class="mume-header" id="dataset-and-libraries">Dataset and Libraries</h2>
+<h1 class="mume-header" id="dataset-and-libraries">Dataset and Libraries</h1>
 
 <p>In our project, we have used two datasets -<br>
 <strong>1. C50 Dataset:</strong> The dataset is the subset of RCV1. These corpus has already been used in author identification experiments. In the top 50 authors (with respect to total size of articles) were selected. 50 authors of texts labeled with at least one subtopic of the class CCAT(corporate/industrial) were selected.That way, it is attempted to minimize the topic factor in distinguishing among the texts. The training corpus consists of 2,500 texts (50 per author) and the test corpus includes other 2,500 texts (50 per author) non-overlapping with the training texts.<br>
-<strong>2.PAN 2014:</strong>  Dataset consists of training corpus that comprises a set of author verification problems in several languages/genres. Each problem consists of some (up to five) known documents by a single person and exactly one questioned document. All documents within a single problem instance will be in the same language and best efforts are applied to assure that within-problem documents are matched for genre, register, theme, and date of writing. The document lengths vary from a few hundred to a few thousand words. For our project, we have only used the documents in English Language.</p>
-<p><strong>Libraries Used</strong>:<br>
-Predominantly we have</p>
-<h2 class="mume-header" id="proposed-methodology">Proposed Methodology</h2>
-
-<h3 class="mume-header" id="baseline">Baseline</h3>
-
-<h3 class="mume-header" id="bert-model-fine-tuning">BERT model fine-tuning</h3>
+<strong>2.PAN 2014:</strong>  Dataset consists of training corpus that comprises a set of author verification problems in several languages/genres. Each problem consists of some (up to five) known documents by a single person and exactly one questioned document. All documents within a single problem instance will be in the same language and best efforts are applied to assure that within-problem documents are matched for genre, register, theme, and date of writing. The document lengths vary from a few hundred to a few thousand words.<br>
+For our project, we have only used the documents in English Language.</p>
+<p><strong>Libraries Used</strong>:</p>
+<ol>
+<li>We have used <i style="color:red">Huggingface&apos;s transformers</i> library for pretrained Transformer based models and all the models in &quot;transformers&quot; libary are written either in PyTorch or tensorflow and thus they can be used natively with these libraries.</li>
+<li>We used tensorflow models from transformers and fine-tuned them natively in tensorflow for out classification task.</li>
+<li>Matplotlib is used for plotting</li>
+<li>Numpy - Used for handling matrices and other mathematical operations.</li>
+<li>sklearn - for validation</li>
+</ol>
+<h1 class="mume-header" id="proposed-methodology">Proposed Methodology</h1>
 
 <h1 class="mume-header" id="results">Results</h1>
 
